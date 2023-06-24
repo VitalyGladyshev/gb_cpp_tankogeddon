@@ -9,7 +9,6 @@ public class TankogeddonEditorTarget : TargetRules
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_1;
-		ExtraModuleNames.Add("Tankogeddon");
+		ExtraModuleNames.AddRange( new string[] { "Tankogeddon" } );
 	}
 }
