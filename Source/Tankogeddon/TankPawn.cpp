@@ -54,6 +54,12 @@ void ATankPawn::TankMovement(float DeltaTime)
 		_targetForwardAxisValue * DeltaTime + rightVector * MoveSpeed *
 		_targetRightAxisValue * DeltaTime;
 	SetActorLocation(movePosition, true);
+
+	float yawRotation = RotationSpeed * _targetYawAxisValue * DeltaTime;
+	FRotator currentRotation = GetActorRotation();
+	yawRotation = currentRotation.Yaw + yawRotation;
+	FRotator newRotation = FRotator(0, yawRotation, 0);
+	SetActorRotation(newRotation);
 }
 
 // Called to bind functionality to input
@@ -69,8 +75,14 @@ void ATankPawn::MoveForward(float AxisValue)
 	_targetForwardAxisValue = AxisValue;
 }
 
-// Движение танка направо-налево
+// Движение танка вправо-влево
 void ATankPawn::MoveRight(float AxisValue)
 {
 	_targetRightAxisValue = AxisValue;
+}
+
+// Поворот танка направо-налево
+void ATankPawn::RotateRight(float AxisValue)
+{
+	_targetYawAxisValue = AxisValue;
 }
