@@ -8,6 +8,8 @@
 #include "Components/ArrowComponent.h"
 #include "Cannon.generated.h"
 
+class AProjectile;
+
 UCLASS()
 class TANKOGEDDON_API ACannon : public AActor
 {
@@ -29,6 +31,8 @@ protected:
 	ECannonType Type = ECannonType::FireProjectile;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	int FireSeries = 6;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
+	TSubclassOf<AProjectile> ProjectileClass;
 	
 	FTimerHandle ReloadTimerHandle;
 	

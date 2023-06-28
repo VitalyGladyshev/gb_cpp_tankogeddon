@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Cannon.h"
+#include "Projectile.h"
 #include "Components/ArrowComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "TimerManager.h"
@@ -51,6 +52,15 @@ void ACannon::Fire(int &iAmmunition, const bool bSpecial)
 	{
 		if (iAmmunition)
 		{
+			AProjectile* projectile =
+				GetWorld()->SpawnActor<AProjectile>(ProjectileClass,
+					ProjectileSpawnPoint->GetComponentLocation(),
+					ProjectileSpawnPoint->GetComponentRotation());
+			if (projectile)
+			{
+				projectile->Start();
+			}
+			
 			if (bSpecial)
 			{
 				GEngine->AddOnScreenDebugMessage(10, 1, FColor::Red,
@@ -67,8 +77,10 @@ void ACannon::Fire(int &iAmmunition, const bool bSpecial)
 				return;
 			}
 			else
+			{
 				GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green,
 					"Fire - projectile Ammo: " + FString::FromInt(iAmmunition));
+			}
 			iAmmunition--;
 		}
 		else
@@ -89,6 +101,15 @@ void ACannon::SeriesFire()
 	iCurrentSeries++;
 	GEngine->AddOnScreenDebugMessage(10, 1, FColor::Red,
 		"Fire - projectile Series: " + FString::FromInt(iCurrentSeries));
+
+	AProjectile* projectile =
+		GetWorld()->SpawnActor<AProjectile>(ProjectileClass,
+			ProjectileSpawnPoint->GetComponentLocation(),
+			ProjectileSpawnPoint->GetComponentRotation());
+	if (projectile)
+	{
+		projectile->Start();
+	}
 
 	if (iCurrentSeries < FireSeries)
 		GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this,
