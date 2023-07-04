@@ -42,6 +42,7 @@ protected:
 public:	
 	// Sets default values for this actor's properties
 	ACannon();
+	//ACannon();
 
 	void Fire(int &iAmmunition, const bool bSpecial = false);
 

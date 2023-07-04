@@ -49,7 +49,7 @@ void ATankPawn::BeginPlay()
 	Super::BeginPlay();
 	TankController = Cast<ATankPlayerController>(GetController());
 
-	SetupCannon();
+	SetupCannon(CannonClass);
 }
 
 // Called every frame
@@ -131,7 +131,7 @@ void ATankPawn::Fire(bool bSpecial)
 }
 
 // Установка пушки
-void ATankPawn::SetupCannon()
+void ATankPawn::SetupCannon(TSubclassOf<ACannon> clCannonClass)
 {
 	if (Cannon)
 	{
@@ -141,7 +141,15 @@ void ATankPawn::SetupCannon()
 	FActorSpawnParameters params;
 	params.Instigator = this;
 	params.Owner = this;
-	Cannon = GetWorld()->SpawnActor<ACannon>(CannonClass, params);
-	Cannon->AttachToComponent(CannonSetupPoint, 
-		FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	Cannon = GetWorld()->SpawnActor<ACannon>(clCannonClass, params);
+	if (Cannon)
+	{
+		Cannon->AttachToComponent(CannonSetupPoint,
+			FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(10, 1, FColor::Blue,
+			"Error!");
+	}
 }

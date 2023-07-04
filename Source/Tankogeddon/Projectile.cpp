@@ -17,8 +17,10 @@ AProjectile::AProjectile()
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
+	
 	Mesh->OnComponentBeginOverlap.AddDynamic(this,
 		&AProjectile::OnMeshOverlapBegin);
+	Mesh->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
 }
 
 // Called when the game starts or when spawned
@@ -47,6 +49,8 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp,
 {
 	UE_LOG(LogTemp, Warning, TEXT("Projectile %s collided with %s. "), *GetName(),
 		*OtherActor->GetName());
+	OtherActor->Destroy();
+	Destroy();
 }
 
 void AProjectile::Move()

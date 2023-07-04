@@ -80,8 +80,11 @@ public:
 	void RotateRight(float AxisValue);
 	UFUNCTION()
 	void Fire(bool bSpecial = false);
+	// Создаём новую пушку и убираем старую
+	void SetupCannon(TSubclassOf<ACannon> clCannonClass);
+	//Пополняем боезапас
+	void AddAmmo(int iAmmunition) { _ammunition += iAmmunition; };
 
 protected:
-	// Создаём новую пушку и убираем старую
-	void SetupCannon();
+
 };
