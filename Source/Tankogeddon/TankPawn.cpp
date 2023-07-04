@@ -19,6 +19,7 @@ ATankPawn::ATankPawn()
 	PrimaryActorTick.bCanEverTick = true;
 
 	_ammunition = 10;
+	_ammunitionSecond = 50;
 
 	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Tank body"));
 	RootComponent = BodyMesh;
@@ -41,6 +42,7 @@ ATankPawn::ATankPawn()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
 
+	_bCurrentCannonMain = true;
 }
 
 // Called when the game starts or when spawned
@@ -50,6 +52,7 @@ void ATankPawn::BeginPlay()
 	TankController = Cast<ATankPlayerController>(GetController());
 
 	SetupCannon(CannonClass);
+	SetupSecondCannon(SecondCannonClass);
 }
 
 // Called every frame
@@ -124,10 +127,25 @@ void ATankPawn::RotateRight(float AxisValue)
 // Огонь из пушки
 void ATankPawn::Fire(bool bSpecial)
 {
-	if (Cannon)
+	if (_bCurrentCannonMain)
 	{
-		Cannon->Fire(_ammunition, bSpecial);
+		if (Cannon)
+		{
+			Cannon->Fire(_ammunition, bSpecial);
+		}
 	}
+	else
+	{
+		if (SecondCannon)
+		{
+			SecondCannon->Fire(_ammunitionSecond, bSpecial);
+		}
+	}
+}
+
+void ATankPawn::ChangeCannon()
+{
+	_bCurrentCannonMain = !_bCurrentCannonMain;
 }
 
 // Установка пушки
@@ -145,6 +163,30 @@ void ATankPawn::SetupCannon(TSubclassOf<ACannon> clCannonClass)
 	if (Cannon)
 	{
 		Cannon->AttachToComponent(CannonSetupPoint,
+			FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(10, 1, FColor::Blue,
+			"Error!");
+	}
+}
+
+// Установка второй пушки
+void ATankPawn::SetupSecondCannon(TSubclassOf<ACannon> clCannonClass)
+{
+	if (SecondCannon)
+	{
+		SecondCannon->Destroy();
+	}
+
+	FActorSpawnParameters params;
+	params.Instigator = this;
+	params.Owner = this;
+	SecondCannon = GetWorld()->SpawnActor<ACannon>(clCannonClass, params);
+	if (SecondCannon)
+	{
+		SecondCannon->AttachToComponent(CannonSetupPoint,
 			FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	}
 	else

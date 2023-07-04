@@ -23,6 +23,8 @@ void ATankPlayerController::SetupInputComponent()
 		&ATankPlayerController::Fire);
 	InputComponent->BindAction("FireSpecial", IE_Pressed, this,
 		&ATankPlayerController::FireSpecial);
+	InputComponent->BindAction("ChangeCannon", IE_Pressed, this,
+		&ATankPlayerController::ChangeCannon);
 }
 
 void ATankPlayerController::BeginPlay()
@@ -70,4 +72,9 @@ void ATankPlayerController::Fire()
 void ATankPlayerController::FireSpecial()
 {
 	TankPawn->Fire(true);
+}
+
+void ATankPlayerController::ChangeCannon()
+{
+	TankPawn->ChangeCannon();
 }

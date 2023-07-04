@@ -56,11 +56,18 @@ protected:
 	UPROPERTY()
 	ACannon* Cannon;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Second cannon")
+	TSubclassOf<ACannon> SecondCannonClass;
+	UPROPERTY()
+	ACannon* SecondCannon;
+
 	float _targetForwardAxisValue;
 	float _targetRightAxisValue;
 	float _targetYawAxisValue;
 	float _currentYawAxisValue;
 	int _ammunition;
+	int _ammunitionSecond;
+	bool _bCurrentCannonMain;
 
 	UPROPERTY()
 	ATankPlayerController* TankController;
@@ -80,8 +87,12 @@ public:
 	void RotateRight(float AxisValue);
 	UFUNCTION()
 	void Fire(bool bSpecial = false);
+	UFUNCTION()
+	void ChangeCannon();
 	// Создаём новую пушку и убираем старую
 	void SetupCannon(TSubclassOf<ACannon> clCannonClass);
+	// Установка второй пушки
+	void SetupSecondCannon(TSubclassOf<ACannon> clCannonClass);
 	//Пополняем боезапас
 	void AddAmmo(int iAmmunition) { _ammunition += iAmmunition; };
 

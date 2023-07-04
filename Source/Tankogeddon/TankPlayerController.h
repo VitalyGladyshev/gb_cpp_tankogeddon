@@ -43,4 +43,6 @@ protected:
 	void Fire();
 
 	void FireSpecial();
+
+	void ChangeCannon();
 };
