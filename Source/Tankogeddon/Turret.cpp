@@ -33,13 +33,13 @@ ATurret::ATurret()
 	HitCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Hit collider"));
 	HitCollider->SetupAttachment(TurretMesh);
 
-	UStaticMesh* turretMeshTemp = LoadObject<UStaticMesh>(this, *TurretMeshPath);
-	if (turretMeshTemp)
-		TurretMesh->SetStaticMesh(turretMeshTemp);
+	//UStaticMesh* turretMeshTemp = LoadObject<UStaticMesh>(this, *TurretMeshPath);
+	//if (turretMeshTemp)
+	//	TurretMesh->SetStaticMesh(turretMeshTemp);
 
-	UStaticMesh* bodyMeshTemp = LoadObject<UStaticMesh>(this, *BodyMeshPath);
-	if (bodyMeshTemp)
-		BodyMesh->SetStaticMesh(bodyMeshTemp);
+	//UStaticMesh* bodyMeshTemp = LoadObject<UStaticMesh>(this, *BodyMeshPath);
+	//if (bodyMeshTemp)
+	//	BodyMesh->SetStaticMesh(bodyMeshTemp);
 
 	HealthComponent = 
 		CreateDefaultSubobject<UHealthComponent>(TEXT("Health component"));

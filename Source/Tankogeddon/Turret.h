@@ -47,10 +47,10 @@ protected:
 
 	int _ammunition;
 
-	const FString BodyMeshPath =
-		"/Script/Engine.StaticMesh'/Game/Assets/Meshes/SM_TowerBase.SM_TowerBase'";		// "StaticMesh'/Game/CSC/Meshes/SM_CSC_Tower1.SM_CSC_Tower1'"
-	const FString TurretMeshPath =
-		"/Script/Engine.StaticMesh'/Game/Assets/Meshes/SM_TowerTurret.SM_TowerTurret'";		// "StaticMesh'/Game/CSC/Meshes/SM_CSC_Gun1.SM_CSC_Gun1'"
+	//const FString BodyMeshPath = "C:/Unreal Projects/Tankogeddon/Content/Assets/Meshes/SM_TowerBase.uasset";
+	//	 // "/Script/Engine.StaticMesh'/Game/Assets/Meshes/SM_TowerBase.SM_TowerBase'";		// "StaticMesh'/Game/CSC/Meshes/SM_CSC_Tower1.SM_CSC_Tower1'"
+	//const FString TurretMeshPath = "C:/Unreal Projects/Tankogeddon/Content/Assets/Meshes/SM_TowerTurret.uasset";
+	//	 // "/Script/Engine.StaticMesh'/Game/Assets/Meshes/SM_TowerTurret.SM_TowerTurret'";		// "StaticMesh'/Game/CSC/Meshes/SM_CSC_Gun1.SM_CSC_Gun1'"
 
 public:	
 	// Sets default values for this actor's properties
