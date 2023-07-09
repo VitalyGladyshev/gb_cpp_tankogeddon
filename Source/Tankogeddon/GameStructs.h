@@ -13,6 +13,18 @@ enum class ECannonType : uint8
 	FireTrace = 1 UMETA(DisplayName = "Use trace")
 };
 
+USTRUCT()
+struct FDamageData
+{
+	GENERATED_BODY()
+	
+	UPROPERTY()
+	float DamageValue;
+	UPROPERTY()
+	AActor* Instigator;
+	UPROPERTY()
+	AActor* DamageMaker;
+};
 
 /**
  * 

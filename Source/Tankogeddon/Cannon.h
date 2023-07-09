@@ -33,6 +33,8 @@ protected:
 	int FireSeries = 6;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 	TSubclassOf<AProjectile> ProjectileClass;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Lazer Damage")
+	float LazerDamage = 1;
 	
 	FTimerHandle ReloadTimerHandle;
 	

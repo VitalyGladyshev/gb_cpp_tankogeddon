@@ -43,6 +43,15 @@ ATankPawn::ATankPawn()
 	Camera->SetupAttachment(SpringArm);
 
 	_bCurrentCannonMain = true;
+
+	HealthComponent = 
+		CreateDefaultSubobject<UHealthComponent>(TEXT("Health component"));
+	
+	HealthComponent->OnDie.AddUObject(this, &ATankPawn::Die);
+	HealthComponent->OnDamaged.AddUObject(this, &ATankPawn::DamageTaked);
+	
+	HitCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Hit collider"));
+	HitCollider->SetupAttachment(TurretMesh);
 }
 
 // Called when the game starts or when spawned
@@ -194,4 +203,22 @@ void ATankPawn::SetupSecondCannon(TSubclassOf<ACannon> clCannonClass)
 		GEngine->AddOnScreenDebugMessage(10, 1, FColor::Blue,
 			"Error!");
 	}
+}
+
+void ATankPawn::TakeDamage(FDamageData DamageData)
+{
+	HealthComponent->TakeDamage(DamageData);
+}
+
+// Танк подбили
+void ATankPawn::Die()
+{
+	Destroy();
+}
+
+// Танк повредили
+void ATankPawn::DamageTaked(float DamageValue)
+{
+	UE_LOG(TankLog, Warning, TEXT("Tank %s taked damage:%f Health:%f"), 
+		*GetName(), DamageValue, HealthComponent->GetHealth());
 }

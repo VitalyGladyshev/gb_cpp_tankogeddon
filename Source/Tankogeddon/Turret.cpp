@@ -15,6 +15,7 @@ ATurret::ATurret()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	_ammunition = 10000;
 
 	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Turret body"));
 	RootComponent = BodyMesh;
@@ -32,15 +33,19 @@ ATurret::ATurret()
 	HitCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Hit collider"));
 	HitCollider->SetupAttachment(TurretMesh);
 
-	//UStaticMesh* turretMeshTemp = LoadObject<UStaticMesh>(this, *TurretMeshPath);
-	//if (turretMeshTemp)
-	//	TurretMesh->SetStaticMesh(turretMeshTemp);
+	UStaticMesh* turretMeshTemp = LoadObject<UStaticMesh>(this, *TurretMeshPath);
+	if (turretMeshTemp)
+		TurretMesh->SetStaticMesh(turretMeshTemp);
 
-	//UStaticMesh* bodyMeshTemp = LoadObject<UStaticMesh>(this, *BodyMeshPath);
-	//if (bodyMeshTemp)
-	//	BodyMesh->SetStaticMesh(bodyMeshTemp);
+	UStaticMesh* bodyMeshTemp = LoadObject<UStaticMesh>(this, *BodyMeshPath);
+	if (bodyMeshTemp)
+		BodyMesh->SetStaticMesh(bodyMeshTemp);
 
-	_ammunition = 10000;
+	HealthComponent = 
+		CreateDefaultSubobject<UHealthComponent>(TEXT("Health component"));
+	
+	HealthComponent->OnDie.AddUObject(this, &ATurret::Die);
+	HealthComponent->OnDamaged.AddUObject(this, &ATurret::DamageTaked);
 }
 
 // Called when the game starts or when spawned
@@ -120,3 +125,18 @@ void ATurret::Tick(float DeltaTime)
 
 }
 
+void ATurret::TakeDamage(FDamageData DamageData)
+{
+	HealthComponent->TakeDamage(DamageData);
+}
+
+void ATurret::Die()
+{
+	Destroy();
+}
+
+void ATurret::DamageTaked(float DamageValue)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Turret %s taked damage:%f Health:%f"), *GetName(),
+		DamageValue, HealthComponent->GetHealth());
+}

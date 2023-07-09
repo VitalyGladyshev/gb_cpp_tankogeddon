@@ -5,6 +5,8 @@
 #include "Components/ArrowComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "TimerManager.h"
+#include "DamageTaker.h"
+#include "GameStructs.h"
 #include "Engine/Engine.h"
 //#include "Misc/CString.h"
 
@@ -64,10 +66,11 @@ void ACannon::Fire(int &iAmmunition, const bool bSpecial)
 				projectile->Start();
 			}
 			
+			iAmmunition--;
 			if (bSpecial)
 			{
 				GEngine->AddOnScreenDebugMessage(10, 1, FColor::Red,
-					"Fire - projectile Ammo: " +
+					"Fire - remaining projectiles: " +
 					FString::FromInt(iAmmunition) +
 					" Series: 1");
 
@@ -76,15 +79,14 @@ void ACannon::Fire(int &iAmmunition, const bool bSpecial)
 				GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this,
 					&ACannon::SeriesFire, 0.5f, false);
 
-				iAmmunition--;
+				
 				return;
 			}
 			else
 			{
 				GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green,
-					"Fire - projectile Ammo: " + FString::FromInt(iAmmunition));
+					"Fire - remaining projectiles: " + FString::FromInt(iAmmunition));
 			}
-			iAmmunition--;
 		}
 		else
 			GEngine->AddOnScreenDebugMessage(10, 1, FColor::Black, 
@@ -107,9 +109,30 @@ void ACannon::Fire(int &iAmmunition, const bool bSpecial)
 		{
 			DrawDebugLine(GetWorld(), start, hitResult.Location, FColor::Red, false,
 				0.5f, 0, 5);
-			if (hitResult.GetActor())
+			//if (hitResult.GetActor())
+			//{
+			//	hitResult.GetActor()->Destroy();
+			//}
+
+			AActor* otherActor = hitResult.GetActor();
+			AActor* owner = GetOwner();
+			AActor* ownerByOwner = owner != nullptr ? owner->GetOwner() : nullptr;
+			if (otherActor != owner && otherActor != ownerByOwner)
 			{
-				hitResult.GetActor()->Destroy();
+				IDamageTaker* damageTakerActor = Cast<IDamageTaker>(otherActor);
+				if (damageTakerActor)
+				{
+					FDamageData damageData;
+					damageData.DamageValue = LazerDamage;
+					damageData.Instigator = owner;
+					damageData.DamageMaker = this;
+
+					damageTakerActor->TakeDamage(damageData);
+				}
+				else
+				{
+					otherActor->Destroy();
+				}
 			}
 		}
 		else

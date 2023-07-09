@@ -7,10 +7,12 @@
 #include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
 #include "Cannon.h"
+#include "DamageTaker.h"
+#include "HealthComponent.h"
 #include "Turret.generated.h"
 
 UCLASS()
-class TANKOGEDDON_API ATurret : public AActor
+class TANKOGEDDON_API ATurret : public AActor, public IDamageTaker
 {
 	GENERATED_BODY()
 	
@@ -23,6 +25,8 @@ protected:
 	UArrowComponent* CannonSetupPoint;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UBoxComponent* HitCollider;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UHealthComponent* HealthComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo")
 	TSubclassOf<ACannon> CannonClass;
@@ -33,7 +37,7 @@ protected:
 	APawn* PlayerPawn;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Targeting")
-	float TargetingRange = 1000;
+	float TargetingRange = 750;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Targeting")
 	float TargetingSpeed = 0.1f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Targeting")
@@ -44,13 +48,20 @@ protected:
 	int _ammunition;
 
 	const FString BodyMeshPath =
-		"StaticMesh'/Game/CSC/Meshes/SM_CSC_Tower1.SM_CSC_Tower1'";
+		"/Script/Engine.StaticMesh'/Game/Assets/Meshes/SM_TowerBase.SM_TowerBase'";		// "StaticMesh'/Game/CSC/Meshes/SM_CSC_Tower1.SM_CSC_Tower1'"
 	const FString TurretMeshPath =
-		"StaticMesh'/Game/CSC/Meshes/SM_CSC_Gun1.SM_CSC_Gun1'";
+		"/Script/Engine.StaticMesh'/Game/Assets/Meshes/SM_TowerTurret.SM_TowerTurret'";		// "StaticMesh'/Game/CSC/Meshes/SM_CSC_Gun1.SM_CSC_Gun1'"
 
 public:	
 	// Sets default values for this actor's properties
 	ATurret();
+
+	UFUNCTION()
+	void TakeDamage(FDamageData DamageData);
+	UFUNCTION()
+	void Die();
+	UFUNCTION()
+	void DamageTaked(float DamageValue);
 
 protected:
 	// Called when the game starts or when spawned
