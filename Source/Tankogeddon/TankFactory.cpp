@@ -3,6 +3,7 @@
 
 #include "TankFactory.h"
 #include "TimerManager.h"
+#include "MapLoader.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
@@ -45,6 +46,9 @@ void ATankFactory::TakeDamage(FDamageData DamageData)
 void ATankFactory::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (LinkedMapLoader)
+		LinkedMapLoader->SetIsActivated(false);
 	
 	FTimerHandle _targetingTimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(_targetingTimerHandle, this,
@@ -65,6 +69,9 @@ void ATankFactory::SpawnNewTank()
 
 void ATankFactory::Die()
 {
+	if (LinkedMapLoader)
+		LinkedMapLoader->SetIsActivated(true);
+	
 	Destroy();
 }
 
