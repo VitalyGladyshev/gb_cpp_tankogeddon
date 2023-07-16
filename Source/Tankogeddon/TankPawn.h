@@ -69,6 +69,13 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UBoxComponent* HitCollider;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, 
+		Category = "AI|Move params|Patrol points" , Meta = (MakeEditWidget = true))
+	TArray<FVector> PatrollingPoints;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, 
+		Category = "AI|Move params | Accurency")
+	float MovementAccurency = 50;
+
 	float _targetForwardAxisValue;
 	float _targetRightAxisValue;
 	float _targetYawAxisValue;
@@ -79,6 +86,11 @@ protected:
 
 	UPROPERTY()
 	ATankPlayerController* TankController;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Change cannon interval")
+	float ChangeCannonInterval = 5;
+
+	FTimerHandle ChangeCannonTimerHandle;
 
 public:	
 	// Called every frame
@@ -97,6 +109,8 @@ public:
 	void Fire(bool bSpecial = false);
 	UFUNCTION()
 	void ChangeCannon();
+	UFUNCTION()
+	void ChangeCannonTimer();
 	// Создаём новую пушку и убираем старую
 	void SetupCannon(TSubclassOf<ACannon> clCannonClass);
 	// Установка второй пушки
@@ -106,6 +120,18 @@ public:
 
 	UFUNCTION()
 	void TakeDamage(FDamageData DamageData);
+
+	UFUNCTION()
+	TArray<FVector> GetPatrollingPoints() { return PatrollingPoints; };
+	UFUNCTION()
+	float GetMovementAccurency() { return MovementAccurency; };
+
+	UFUNCTION()
+	FVector GetTurretForwardVector();
+	UFUNCTION()
+	void RotateTurretTo(FVector TargetPosition);
+
+	FVector GetEyesPosition();
 
 protected:
 	UFUNCTION()

@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "TankPlayerController.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "TimerManager.h"
 #include "Components/ArrowComponent.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(TankLog, All, All);
@@ -18,7 +19,7 @@ ATankPawn::ATankPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	_ammunition = 10;
+	_ammunition = 30;
 	_ammunitionSecond = 50;
 
 	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Tank body"));
@@ -62,6 +63,9 @@ void ATankPawn::BeginPlay()
 
 	SetupCannon(CannonClass);
 	SetupSecondCannon(SecondCannonClass);
+
+	GetWorld()->GetTimerManager().SetTimer(ChangeCannonTimerHandle, this,
+		&ATankPawn::ChangeCannonTimer, ChangeCannonInterval, false);
 }
 
 // Called every frame
@@ -105,13 +109,7 @@ void ATankPawn::TankMovement(float DeltaTime)
 	if (TankController)
 	{
 		FVector mousePos = TankController->GetMousePos();
-		FRotator targetRotation =
-			UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), mousePos);
-		FRotator currRotation = TurretMesh->GetComponentRotation();
-		targetRotation.Pitch = currRotation.Pitch;
-		targetRotation.Roll = currRotation.Roll;
-		TurretMesh->SetWorldRotation(FMath::Lerp(currRotation, targetRotation,
-			TurretRotationInterpolationKey));
+		RotateTurretTo(mousePos);
 	}
 }
 
@@ -155,6 +153,14 @@ void ATankPawn::Fire(bool bSpecial)
 void ATankPawn::ChangeCannon()
 {
 	_bCurrentCannonMain = !_bCurrentCannonMain;
+}
+
+void ATankPawn::ChangeCannonTimer()
+{
+	_bCurrentCannonMain = !_bCurrentCannonMain;
+
+	GetWorld()->GetTimerManager().SetTimer(ChangeCannonTimerHandle, this,
+		&ATankPawn::ChangeCannonTimer, ChangeCannonInterval, false);
 }
 
 // Установка пушки
@@ -208,6 +214,27 @@ void ATankPawn::SetupSecondCannon(TSubclassOf<ACannon> clCannonClass)
 void ATankPawn::TakeDamage(FDamageData DamageData)
 {
 	HealthComponent->TakeDamage(DamageData);
+}
+
+FVector ATankPawn::GetTurretForwardVector()
+{
+	return TurretMesh->GetForwardVector();
+}
+
+void ATankPawn::RotateTurretTo(FVector TargetPosition)
+{
+	FRotator targetRotation =
+		UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetPosition);
+	FRotator currRotation = TurretMesh->GetComponentRotation();
+	targetRotation.Pitch = currRotation.Pitch;
+	targetRotation.Roll = currRotation.Roll;
+	TurretMesh->SetWorldRotation(FMath::Lerp(currRotation, targetRotation,
+		TurretRotationInterpolationKey));
+}
+
+FVector ATankPawn::GetEyesPosition()
+{
+	return CannonSetupPoint->GetComponentLocation();
 }
 
 // Танк подбили

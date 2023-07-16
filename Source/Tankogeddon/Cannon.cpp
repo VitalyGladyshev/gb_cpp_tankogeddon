@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Cannon.h"
-#include "Projectile.h"
-#include "Components/ArrowComponent.h"
+//#include "Projectile.h"
+//#include "Components/ArrowComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "TimerManager.h"
 #include "DamageTaker.h"
@@ -26,6 +26,12 @@ ACannon::ACannon()
 	ProjectileSpawnPoint = 
 		CreateDefaultSubobject<UArrowComponent>(TEXT("Spawn point"));
 	ProjectileSpawnPoint->SetupAttachment(Mesh);
+
+	ShootEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Shoot Effect"));
+	ShootEffect->SetupAttachment(ProjectileSpawnPoint);
+
+	AudioEffect = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio Effect"));
+	AudioEffect->SetupAttachment(ProjectileSpawnPoint);
 }
 
 // Called when the game starts or when spawned
@@ -64,6 +70,8 @@ void ACannon::Fire(int &iAmmunition, const bool bSpecial)
 			if (projectile)
 			{
 				projectile->Start();
+				ShootEffect->ActivateSystem();
+				AudioEffect->Play();
 			}
 			
 			iAmmunition--;
@@ -109,6 +117,8 @@ void ACannon::Fire(int &iAmmunition, const bool bSpecial)
 		{
 			DrawDebugLine(GetWorld(), start, hitResult.Location, FColor::Red, false,
 				0.5f, 0, 5);
+			ShootEffect->ActivateSystem();
+			AudioEffect->Play();
 			//if (hitResult.GetActor())
 			//{
 			//	hitResult.GetActor()->Destroy();
@@ -137,7 +147,7 @@ void ACannon::Fire(int &iAmmunition, const bool bSpecial)
 		}
 		else
 		{
-			DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 0.5f, 0, 5);
+			DrawDebugLine(GetWorld(), start, end, FColor::Blue, false, 0.5f, 0, 5);
 		}
 	}
 
@@ -158,6 +168,8 @@ void ACannon::SeriesFire()
 	if (projectile)
 	{
 		projectile->Start();
+		ShootEffect->ActivateSystem();
+		AudioEffect->Play();
 	}
 
 	if (iCurrentSeries < FireSeries)

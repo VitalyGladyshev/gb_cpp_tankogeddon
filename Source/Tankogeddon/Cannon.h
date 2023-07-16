@@ -4,8 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameStructs.h"
+#include "Projectile.h"
+#include "Camera/CameraModifier_CameraShake.h"		//#include "Camera/CameraShake.h"
+#include "Components/AudioComponent.h"
 #include "GameFramework/Actor.h"
 #include "Components/ArrowComponent.h"
+#include "GameFramework/ForceFeedbackEffect.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "Cannon.generated.h"
 
 class AProjectile;
@@ -35,6 +40,10 @@ protected:
 	TSubclassOf<AProjectile> ProjectileClass;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Lazer Damage")
 	float LazerDamage = 1;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UParticleSystemComponent* ShootEffect;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UAudioComponent* AudioEffect;
 	
 	FTimerHandle ReloadTimerHandle;
 	
