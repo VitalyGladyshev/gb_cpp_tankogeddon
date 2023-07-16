@@ -35,7 +35,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Targeting")
 	float TargetingSpeed = 0.1f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Targeting")
-	float Accurency = 100;
+	float Accurency = 20;
 
 protected:
 	virtual void BeginPlay() override;
@@ -55,4 +55,6 @@ protected:
 	void Fire();
 
 	bool IsPlayerSeen();
+
+	void Initialize();
 };

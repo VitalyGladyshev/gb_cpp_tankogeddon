@@ -216,6 +216,21 @@ void ATankPawn::TakeDamage(FDamageData DamageData)
 	HealthComponent->TakeDamage(DamageData);
 }
 
+TArray<FVector> ATankPawn::GetPatrollingPoints()
+{
+	TArray<FVector> points;
+	for (ATargetPoint* point : PatrollingPoints)
+	{
+		points.Add(point->GetActorLocation());
+	}
+	return points;
+}
+
+void ATankPawn::SetPatrollingPoints(TArray<ATargetPoint*> NewPatrollingPoints)
+{
+	PatrollingPoints = NewPatrollingPoints;
+}
+
 FVector ATankPawn::GetTurretForwardVector()
 {
 	return TurretMesh->GetForwardVector();
