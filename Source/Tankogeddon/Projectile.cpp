@@ -67,7 +67,21 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp,
 		}
 		else
 		{
-			OtherActor->Destroy();
+			//OtherActor->Destroy();
+
+			UPrimitiveComponent* mesh =
+				Cast<UPrimitiveComponent>(OtherActor->GetRootComponent());
+			if (mesh)
+			{
+				if (mesh->IsSimulatingPhysics())
+				{
+					FVector forceVector =
+						OtherActor->GetActorLocation() - GetActorLocation();
+					forceVector.Normalize();
+					mesh->AddImpulse(forceVector * PushForce, NAME_None,
+						false);
+				}
+			}
 		}
 		Destroy();
 	}
