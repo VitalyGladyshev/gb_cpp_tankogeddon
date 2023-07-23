@@ -24,13 +24,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
 	float PushForce = 1000;
 
+
+	UPROPERTY(BlueprintReadWrite, Category = "Damage")
+	float ExplodeRadius = 150;
+
 	FTimerHandle MovementTimerHandle;
 
 public:	
 	// Sets default values for this actor's properties
 	AProjectile();
 
-	void Start();
+	virtual void Start();
 
 protected:
 	// Called when the game starts or when spawned
@@ -42,7 +46,10 @@ protected:
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION()
-	void Move();
+	virtual void Move();
+
+	UFUNCTION()
+	void Explode();
 
 public:	
 	// Called every frame

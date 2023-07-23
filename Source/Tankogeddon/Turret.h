@@ -63,6 +63,8 @@ public:
 	UFUNCTION()
 	void DamageTaked(float DamageValue);
 
+	virtual void PostInitializeComponents() override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
