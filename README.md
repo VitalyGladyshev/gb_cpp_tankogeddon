@@ -1,2 +1,2 @@
 # gb_cpp_tankogeddon
-Основы работы с Unreal Engine для С++
+Танкогеддон на Unreal Engine для С++
